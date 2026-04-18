@@ -1,0 +1,33 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  AWS_REGION: "us-east-2"
+  ECR_REPOSITORY: "319426459497.dkr.ecr.us-east-2.amazonaws.com/portfolio-api"
+  ECS_CLUSTER: "default"
+  ECS_SERVICE: "portfolio-api-5b60"
+
+build-image:
+  stage: build
+  image: docker:24.0.5
+  services:
+    - docker:24.0.5-dind
+  before_script:
+    - apk add --no-cache aws-cli
+  script:
+    - echo "Authenticating with AWS ECR..."
+    - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPOSITORY
+    - echo "Building the Java 26 Docker image..."
+    - docker build -t $ECR_REPOSITORY:latest .
+    - echo "Pushing image to the cloud vault..."
+    - docker push $ECR_REPOSITORY:latest
+
+deploy-ecs:
+  stage: deploy
+  image: amazon/aws-cli:latest
+  needs:
+    - build-image
+  script:
+    - echo "Telling ECS to pull the new image and restart the server..."
+    - aws ecs update-service --cluster $ECS_CLUSTER --service $ECS_SERVICE --force-new-deployment

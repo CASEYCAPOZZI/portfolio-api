@@ -1,4 +1,4 @@
-package com.caseycapozzi.portfolio_api;
+package com.caseycapozzi.portfolioapi;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

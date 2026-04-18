@@ -1,4 +1,4 @@
-package com.caseycapozzi.portfolio_api.controller;
+package com.caseycapozzi.portfolioapi.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
