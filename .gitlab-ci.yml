@@ -25,7 +25,9 @@ build-image:
 
 deploy-ecs:
   stage: deploy
-  image: amazon/aws-cli:latest
+  image: 
+    name: amazon/aws-cli:latest
+    entrypoint: [""]
   needs:
     - build-image
   script:
