@@ -21,6 +21,6 @@ public class StatusController {
 	public StatusResponse status() {
 		String[] activeProfiles = environment.getActiveProfiles();
 		String env = activeProfiles.length > 0 ? String.join(",", activeProfiles) : "production";
-		return new StatusResponse("UP", env, LocalDateTime.now());
+		return new StatusResponse("UP and running!", env, LocalDateTime.now());
 	}
 }
