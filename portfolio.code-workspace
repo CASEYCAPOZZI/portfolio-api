@@ -1,0 +1,148 @@
+{
+  "folders": [
+    {
+      "name": "API",
+      "path": "."
+    },
+    {
+      "name": "Web",
+      "path": "../portfolio-web"
+    }
+  ],
+  "settings": {
+    "npm.autoDetect": "off",
+    "npm.enableScriptExplorer": false,
+    "terminal.integrated.env.windows": {
+      "JAVA_HOME": "C:\\Program Files\\Zulu\\zulu-26"
+    },
+    "java.configuration.runtimes": [
+      {
+        "name": "JavaSE-26",
+        "path": "C:\\Program Files\\Zulu\\zulu-26",
+        "default": true
+      }
+    ],
+    "java.jdt.ls.java.home": "C:\\Program Files\\Zulu\\zulu-26"
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "API: Spring Boot",
+        "type": "shell",
+        "command": ".\\mvnw.cmd spring-boot:run",
+        "options": {
+          "cwd": "${workspaceFolder:API}",
+          "env": {
+            "JAVA_HOME": "${env:JAVA_HOME}"
+          }
+        },
+        "isBackground": true,
+        "problemMatcher": {
+          "owner": "spring-boot",
+          "pattern": {
+            "regexp": "^$"
+          },
+          "background": {
+            "activeOnStart": true,
+            "beginsPattern": ".",
+            "endsPattern": "Started PortfolioApiApplication"
+          }
+        },
+        "presentation": {
+          "reveal": "always",
+          "panel": "dedicated",
+          "group": "portfolio-servers"
+        }
+      },
+      {
+        "label": "Web: Next.js dev",
+        "type": "shell",
+        "command": "npm run dev",
+        "options": {
+          "cwd": "${workspaceFolder:Web}"
+        },
+        "isBackground": true,
+        "problemMatcher": {
+          "owner": "nextjs",
+          "pattern": {
+            "regexp": "^$"
+          },
+          "background": {
+            "activeOnStart": true,
+            "beginsPattern": ".",
+            "endsPattern": "(ready|Ready|Local:\\s+http)"
+          }
+        },
+        "presentation": {
+          "reveal": "always",
+          "panel": "dedicated",
+          "group": "portfolio-servers"
+        }
+      },
+      {
+        "label": "Full Stack: Start All",
+        "dependsOn": ["API: Spring Boot", "Web: Next.js dev"],
+        "dependsOrder": "parallel",
+        "problemMatcher": []
+      },
+      {
+        "label": "API: Run tests",
+        "type": "shell",
+        "command": ".\\mvnw.cmd test",
+        "options": {
+          "cwd": "${workspaceFolder:API}",
+          "env": {
+            "JAVA_HOME": "${env:JAVA_HOME}"
+          }
+        },
+        "group": "test"
+      },
+      {
+        "label": "Web: Run tests",
+        "type": "shell",
+        "command": "npm test",
+        "options": {
+          "cwd": "${workspaceFolder:Web}"
+        },
+        "group": "test"
+      },
+      {
+        "label": "Full Stack: Run all tests",
+        "dependsOn": ["API: Run tests", "Web: Run tests"],
+        "dependsOrder": "parallel",
+        "group": "test",
+        "problemMatcher": []
+      }
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "API: Spring Boot",
+        "type": "node-terminal",
+        "request": "launch",
+        "command": ".\\mvnw.cmd spring-boot:run",
+        "cwd": "${workspaceFolder:API}",
+        "env": {
+          "JAVA_HOME": "${env:JAVA_HOME}"
+        }
+      },
+      {
+        "name": "Web: Next.js dev",
+        "type": "node-terminal",
+        "request": "launch",
+        "command": "npm run dev",
+        "cwd": "${workspaceFolder:Web}"
+      }
+    ],
+    "compounds": [
+      {
+        "name": "Full Stack (API + Web)",
+        "configurations": ["API: Spring Boot", "Web: Next.js dev"],
+        "stopAll": true
+      }
+    ]
+  }
+}

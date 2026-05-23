@@ -1,0 +1,22 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Spring Boot API",
+      "type": "java",
+      "request": "launch",
+      "mainClass": "com.caseycapozzi.portfolioapi.PortfolioApiApplication",
+      "projectName": "portfolioapi"
+    },
+    {
+      "name": "Spring Boot API (Maven)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": ".\\mvnw.cmd spring-boot:run",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "JAVA_HOME": "${env:JAVA_HOME}"
+      }
+    }
+  ]
+}
