@@ -43,7 +43,12 @@ curl http://localhost:8080/api/v1/status
 
 ## API Docs (Swagger / OpenAPI)
 
-Swagger UI is provided by `springdoc-openapi` when the app is running (path depends on Springdoc defaults/config).
+With the app running locally:
+
+- **Swagger UI**: http://localhost:8080/swagger-ui.html
+- **OpenAPI JSON**: http://localhost:8080/v3/api-docs
+
+Requires `springdoc-openapi` 3.x with Spring Boot 4 (see `pom.xml`).
 
 ## Notes on Configuration
 
