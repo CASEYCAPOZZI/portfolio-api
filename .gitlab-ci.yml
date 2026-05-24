@@ -33,3 +33,21 @@ deploy-ecs:
   script:
     - echo "Telling ECS to pull the new image and restart the server..."
     - aws ecs update-service --cluster $ECS_CLUSTER --service $ECS_SERVICE --force-new-deployment
+    - echo "Waiting for ECS service to stabilize..."
+    - aws ecs wait services-stable --cluster $ECS_CLUSTER --services $ECS_SERVICE
+    - |
+      python3 <<'PY'
+      import sys, time, urllib.request
+      url = "https://api.caseycapozzi.com/health"
+      for attempt in range(1, 13):
+          try:
+              with urllib.request.urlopen(url, timeout=15) as resp:
+                  if b"UP" in resp.read():
+                      print("API is healthy.")
+                      sys.exit(0)
+          except Exception as exc:
+              print(f"Attempt {attempt}: {exc}")
+          time.sleep(15)
+      print("ERROR: API did not become healthy after deploy.")
+      sys.exit(1)
+      PY

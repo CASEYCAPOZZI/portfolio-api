@@ -30,8 +30,12 @@ WORKDIR /app
 # Copy ONLY the compiled JAR from Stage 1 into this final image
 COPY --from=builder /app/target/*.jar app.jar
 
-# Expose the port
 EXPOSE 8080
 
-# Boot the application
+# Netty (WebClient) needs native access on Java 22+; cap heap for small ECS tasks.
+ENV JAVA_TOOL_OPTIONS="--enable-native-access=ALL-UNNAMED -XX:MaxRAMPercentage=75.0"
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+  CMD wget -qO- http://127.0.0.1:8080/health || exit 1
+
 ENTRYPOINT ["java", "-jar", "app.jar"]
