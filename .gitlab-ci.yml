@@ -1,4 +1,5 @@
 stages:
+  - test
   - build
   - deploy
 
@@ -8,13 +9,22 @@ variables:
   ECS_CLUSTER: "default"
   ECS_SERVICE: "portfolio-api-5b60"
 
+unit-tests:
+  stage: test
+  image: amazoncorretto:26-alpine
+  script:
+    - chmod +x ./mvnw
+    - ./mvnw -B test
+
 build-image:
   stage: build
+  needs:
+    - unit-tests
   image: docker:24.0.5
   services:
     - docker:24.0.5-dind
   before_script:
-    - apk add --no-cache aws-cli
+    - apk add --no-cache aws-cli python3
   script:
     - echo "Authenticating with AWS ECR..."
     - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPOSITORY
@@ -25,7 +35,7 @@ build-image:
 
 deploy-ecs:
   stage: deploy
-  image: 
+  image:
     name: amazon/aws-cli:latest
     entrypoint: [""]
   needs:
@@ -35,19 +45,4 @@ deploy-ecs:
     - aws ecs update-service --cluster $ECS_CLUSTER --service $ECS_SERVICE --force-new-deployment
     - echo "Waiting for ECS service to stabilize..."
     - aws ecs wait services-stable --cluster $ECS_CLUSTER --services $ECS_SERVICE
-    - |
-      python3 <<'PY'
-      import sys, time, urllib.request
-      url = "https://api.caseycapozzi.com/health"
-      for attempt in range(1, 13):
-          try:
-              with urllib.request.urlopen(url, timeout=15) as resp:
-                  if b"UP" in resp.read():
-                      print("API is healthy.")
-                      sys.exit(0)
-          except Exception as exc:
-              print(f"Attempt {attempt}: {exc}")
-          time.sleep(15)
-      print("ERROR: API did not become healthy after deploy.")
-      sys.exit(1)
-      PY
+    - python3 scripts/smoke-api.py
