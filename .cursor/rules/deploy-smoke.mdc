@@ -1,0 +1,13 @@
+---
+description: Docker, ECS deploy, and smoke tests (portfolio-api)
+globs: .gitlab-ci.yml,Dockerfile,scripts/**/*.py
+alwaysApply: false
+---
+
+# Deploy & smoke (API)
+
+- GitLab CI: `./mvnw test` → Docker build/push ECR → ECS deploy → `scripts/smoke-api.py`
+- Smoke verifies `/health`, `/api/v1/status`, both `/api/fishing/*/status` (biteScore 0–100)
+- Docker: Java 26, `--enable-native-access=ALL-UNNAMED` for Netty/WebClient
+- Pipeline failure after deploy = investigate ECS service `portfolio-api-5b60` before changing frontend
+- Full detail: `AGENTS.md` and `README.md` → Deployment & smoke tests

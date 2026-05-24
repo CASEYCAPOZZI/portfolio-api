@@ -1,0 +1,19 @@
+---
+description: Read project context before non-trivial work (portfolio-api)
+alwaysApply: true
+---
+
+# Portfolio API — agent bootstrap
+
+At the **start of every session or non-trivial task**, read in this repo:
+
+1. `AGENTS.md` — endpoints, deploy, smoke tests, conventions (canonical; update here, not in rules)
+2. `README.md` — run/test commands
+
+**Sibling web repo:** `../portfolio-web`. Full-stack workspace: `portfolio.code-workspace` in this repo.
+
+**Stack:** Java 26, Spring Boot 4, WebMvc + WebClient. Prod: ECS behind `api.caseycapozzi.com`.
+
+**Springdoc:** use **springdoc-openapi 3.x** with Boot 4 (not 2.x).
+
+**Tests:** `./mvnw test` · post-deploy: `python3 scripts/smoke-api.py` · **Do not commit** unless the user asks.

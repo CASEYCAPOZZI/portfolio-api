@@ -1,5 +1,7 @@
 # AGENTS.md — AI Agent Context for portfolio-api
 
+> **For all agents (including Cursor Auto):** `.cursor/rules/` is injected automatically. This file is the **canonical** deep reference — keep rules short; update details here.
+
 Read this at the start of sessions on the **Java API**. For the Next.js frontend, see `../portfolio-web/AGENTS.md`.
 
 ---

@@ -1,0 +1,14 @@
+---
+description: Java and Spring Boot conventions (portfolio-api)
+globs: src/**/*.java,pom.xml
+alwaysApply: false
+---
+
+# Java / Spring
+
+- **Lombok** for boilerplate (`@Data`, `@Builder`, `@RequiredArgsConstructor`) — no hand-written getters/setters
+- **Constructor injection** only (not `@Autowired` on fields)
+- **Tests:** `@WebMvcTest` + `@MockitoBean` (Spring Boot 4 — not deprecated `@MockBean`)
+- Fishing endpoints call **USGS + NWS** — can take several seconds; do not assume sub-second responses
+- No DB by default (`DataSourceAutoConfiguration` excluded in `application.yaml`)
+- CORS allows `localhost:3000`, `caseycapozzi.com`, `www.caseycapozzi.com`
